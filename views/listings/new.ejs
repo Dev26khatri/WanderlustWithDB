@@ -1,0 +1,66 @@
+<% layout("/layouts/boilerplate") %>
+<body>
+  <div class="row">
+    <div class="col-8 offset-2">
+
+      <h3>Create A New Listing</h3>
+      <form method="post" action="/listings">
+        <div class="mb-3">
+          <label for="title" class="form-lable">Title</label>
+          <input
+            type="text"
+            name="listing[title]"
+            placeholder="Enter Title"
+            class="form-control"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="description" class="form-lable">Description</label>
+          <textarea
+            type="text"
+            name="listing[description]"
+            placeholder="Enter Description "
+            class="form-control"
+          ></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="image" class="form-lable">Image Link</label>
+    
+          <input
+            type="text"
+            name="listing[image]"
+            placeholder="Enter Image URL/Link"
+            class="form-control"
+          />
+        </div>
+        <div class="row">
+          <div class="mb-3 col-md-4">
+            <label for="price" class="form-lable">Price</label>
+      
+            <input type="number" class="form-control" name="listing[price]"
+            placeholder="Enter price" />
+          </div>
+          <div class="mb-3 col-md-8">
+            <label for="location" class="form-lable">Location</label>
+            <input
+              type="text"
+              name="listing[location]"
+              placeholder="Enter location"
+              class="form-control"
+            />
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="Country" class="form-lable">Country</label>
+          <input
+            class="form-control"
+            type="text"
+            name="listing[country]"
+            placeholder="Enter Country"
+          />
+        </div>
+        <button class="btn btn-dark add-btn mb-3 mt-3" >Create</button>
+    </div>
+  </div>
+  </form>
+</body>

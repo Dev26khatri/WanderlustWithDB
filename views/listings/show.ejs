@@ -1,33 +1,69 @@
 <% layout('/layouts/boilerplate.ejs') -%>
 
-<div class="row mt-3">
+<div class="row">
   <div class="col-8 offset-3">
-    <h3>Listing Details</h3>
+    <h3><%= listings.title %></h3>
   </div>
-
-  <div class="card col-6 offset-3 show-card">
+  <div class="mb-3 col-6 offset-3 show-card">
     <img src="<%= listings.image %>" alt="..." class="card-img-top show-img" />
     <div class="card-body">
       <p class="card-text">
-        <b><%= listings.title %></b>
-        <br />
         <%= listings.description %> <br />
-        &#8377;<%= listings.price %> <br />
-        <%= listings.location %> <br />
-        <%= listings.country %>
+        &#8377; <%= listings.price %> <br />
+        <i class="fa-solid fa-location-dot"></i><%= listings.location %> , <%=
+        listings.country %>
       </p>
     </div>
   </div>
 
-  <div class="btns mb-3 mt-4">
+  <div class="btns mb-3 mt-2">
     <a
       href="/listings/<%= listings._id %>/edit"
-      class="btn btn-dark col-1 offset-3"
+      class="btn btn-dark col-1 offset-3 px-4 py-2"
     >
       Edit
     </a>
     <form action="/listings/<%= listings._id %>?_method=DELETE" method="POST">
-      <button class="btn btn-dark offset-4 edit-btn">Delete</button>
+      <button class="btn btn-dark offset-4 edit-btn px-4 py-2">Delete</button>
     </form>
+  </div>
+  <hr />
+  <div class="col-8 offset-3">
+    <h4>Leave a Review</h4>
+    <form
+      action="/listings/<%= listings._id %>/reviews"
+      method="POST"
+      novalidate
+      class="needs-validation"
+    >
+      <div>
+        <label class="form-label" for="rating"
+          >Rating <span> &#11088;</span></label
+        >
+        <input
+          type="range"
+          min="1"
+          max="5"
+          id="rating"
+          name="review[rating]"
+          class="form-range"
+        />
+      </div>
+      <div>
+        <label class="form-label" for="comment"
+          >Comment <i class="fa-regular fa-comment"></i>
+        </label>
+        <textarea
+          name="review[comment]"
+          id="comment"
+          cols="25"
+          rows="5"
+          class="form-control"
+          required
+        ></textarea>
+      </div>
+      <button class="btn btn-dark mt-2 mb-2 px-4 py-2">Submit</button>
+    </form>
+    <div><%= listings.reviews %></div>
   </div>
 </div>

@@ -1,5 +1,6 @@
 const monggoose = require("mongoose");
 const Schema = monggoose.Schema;
+const Review = require("./review");
 const ImageChoices = [
   "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   "https://plus.unsplash.com/premium_photo-1675745329954-9639d3b74bbf?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -33,6 +34,12 @@ const ListingSchema = new Schema({
       ref: "Review",
     },
   ],
+});
+
+ListingSchema.post("findOneAndDelete", async (listing) => {
+  if (listing) {
+    await Review.deleteMany({ _id: { $in: listing.reviews } });
+  }
 });
 
 const Listing = monggoose.model("Listing", ListingSchema);

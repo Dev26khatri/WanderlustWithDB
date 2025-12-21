@@ -61,9 +61,29 @@
           class="form-control"
           required
         ></textarea>
+        <div class="invalid-feedback">Please fill the field</div>
+        <div class="valid-feedback">Thanks</div>
       </div>
       <button class="btn btn-dark mt-2 mb-2 px-4 py-2">Submit</button>
     </form>
-    <div><%= listings.reviews %></div>
+    <hr />
+    <h4 class="mb-4 all-reviews">All Reviews</h4>
+    <div class="row mb-2">
+      <% for (review of listings.reviews) { %>
+      <div class="card col-5 ms-3 mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Jone Doe</h5>
+          <p class="card-text review-comment">-<%= review.comment %></p>
+          <p class="card-text"><%= review.rating %> &#11088;</p>
+        </div>
+        <form
+          action="/listings/<%= listings._id %>/reviews/<%=review._id %>?_method=DELETE"
+          method="POST"
+        >
+          <button class="btn btn-danger px-4 py-2 mb-3 mt-4">Delete</button>
+        </form>
+      </div>
+      <% } %>
+    </div>
   </div>
 </div>

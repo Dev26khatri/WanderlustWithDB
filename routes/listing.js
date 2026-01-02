@@ -1,5 +1,5 @@
 const express = require("express");
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 const wrapAsync = require("../utils/wrapAsync.js");
 const ExpressError = require("../utils/ExpressError.js");
 const Listing = require("../models/listing");
@@ -34,7 +34,9 @@ router.get(
     let { id } = req.params;
     let listings = await Listing.findById(id).populate("reviews");
     if (!listings) {
-      throw new ExpressError(404, "Listing Not Found");
+      req.flash("error", "The listing you requested does not exist");
+      return res.redirect("/listings");
+      // throw new ExpressError(404, "Listing Not Found");
     }
     res.render("listings/show.ejs", { listings });
   })
@@ -49,6 +51,7 @@ router.post(
     const Newlisting = new Listing(req.body.listing);
 
     await Newlisting.save();
+    req.flash("success", "New Listing Created!");
     res.redirect("/listings");
   })
 );
@@ -59,6 +62,11 @@ router.get(
   wrapAsync(async (req, res, next) => {
     let { id } = req.params;
     let listing = await Listing.findById(id);
+    if (!listing) {
+      req.flash("error", "The listing you requested does not exist");
+      return res.redirect("/listings");
+      // throw new ExpressError(404, "Listing Not Found");
+    }
     res.render("listings/update.ejs", { listing });
   })
 );
@@ -73,6 +81,7 @@ router.put(
       { ...req.body.listing },
       { new: true }
     );
+    req.flash("success", "Listing Was Updated!");
 
     res.redirect(`/listings/${req.params.id}`);
   })
@@ -86,6 +95,8 @@ router.delete(
       new: true,
     });
     console.log(DeleteDocuments);
+    req.flash("success", "Listing Was Deleted!");
+
     res.redirect("/listings");
   })
 );

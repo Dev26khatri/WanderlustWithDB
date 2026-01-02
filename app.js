@@ -1,8 +1,8 @@
 //Import all important library
 const express = require("express");
 const app = express();
+const session = require("express-session");
 const mongoose = require("mongoose");
-const Listing = require("./models/listing");
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
@@ -10,18 +10,25 @@ const dotenv = require("dotenv");
 const ExpressError = require("./utils/ExpressError.js");
 const RouterListings = require("./routes/listing.js");
 const RouterReview = require("./routes/review.js");
-//Library configurtions
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "ejs");
-dotenv.config();
+const flash = require("connect-flash");
 
-//Use for the Middlwear functions
+//Public Folder Join to The main File
+app.set("view engine", "ejs");
+app.engine("ejs", ejsMate);
+app.set("views", path.join(__dirname, "views"));
+app.use(express.static(path.join(__dirname, "public")));
+//When We Use .env File to Protect Your Links and Passwords
+dotenv.config();
+//Cookies Creation
+
+//Create Response in to JSON
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(methodOverride("_method"));
-app.use(express.static(path.join(__dirname, "public")));
-app.engine("ejs", ejsMate);
 
+//Method Ovverride Method
+app.use(methodOverride("_method"));
+
+//MonogDB Connection
 const MONGO_URL = process.env.MONGO_URL;
 async function main() {
   await mongoose.connect(MONGO_URL);
@@ -29,24 +36,48 @@ async function main() {
 main()
   .then(() => console.log("Connected with DB Succsfully"))
   .catch((err) => console.log(err));
+
+//This is the Session options
+const sessionOptions = {
+  secret: "mysupersecretcode",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+  },
+};
 app.get("/", (req, res) => {
   res.send("You At The Home route");
 });
 
-//"New" Route For Create NEw Listings
+//Create Session For The Browser
+app.use(session(sessionOptions));
+app.use(flash());
 
+app.use((req, res, next) => {
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
+  next();
+});
+
+//This the Listing Routes
 app.use("/listings", RouterListings);
+
 //Reviews Route
-//POST Route
 app.use("/listings/:id/reviews", RouterReview);
 
+//If you Approch the UnDefined Route then this route will triggerd
 app.get("/:any", (req, res, next) => {
   next(new ExpressError(404, "Page Not Found"));
 });
 
+//Any Route Have an Error So they Call to ErrorHandling Middleware
 app.use((err, req, res, next) => {
   let { statusCode = 500, message = "Something Went Wrong" } = err;
   res.status(statusCode).render("error", { err });
+  // next();
   // res.status(statusCode).send(message);
 });
 

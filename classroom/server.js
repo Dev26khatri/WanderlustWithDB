@@ -30,6 +30,7 @@ app.get("/register", (req, res) => {
   } else {
     req.flash("success", "User successfully created!");
   }
+  res.send(name);
   res.redirect("/hello");
 });
 app.get("/hello", (req, res) => {

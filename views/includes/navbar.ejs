@@ -13,11 +13,19 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
+      <div class="navbar-nav">
         <a class="nav-link" aria-current="page" href="/">Home</a>
         <a class="nav-link" href="/listings">All Listings</a>
         <a class="nav-link" href="/listings/new">Add New Listings</a>
-      </ul>
+      </div>
+      <div class="navbar-nav ms-auto">
+        <% if(!currUser) {%>
+        <a class="nav-link" aria-current="page" href="/singup">SingUp</a>
+        <a class="nav-link" href="/login">Login</a>
+        <%}%> <% if(currUser) { %>
+        <a class="nav-link" href="/logout">LogOut</a>
+        <%}%>
+      </div>
     </div>
   </div>
 </nav>

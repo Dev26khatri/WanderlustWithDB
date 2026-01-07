@@ -11,6 +11,11 @@ const ExpressError = require("./utils/ExpressError.js");
 const RouterListings = require("./routes/listing.js");
 const RouterReview = require("./routes/review.js");
 const flash = require("connect-flash");
+//Related to Authenition Useing passport library
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+const User = require("./models/user.js");
+const user = require("./routes/user.js");
 
 //Public Folder Join to The main File
 app.set("view engine", "ejs");
@@ -55,12 +60,32 @@ app.get("/", (req, res) => {
 //Create Session For The Browser
 app.use(session(sessionOptions));
 app.use(flash());
+//Authentication
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
+  res.locals.currUser = req.user;
   next();
 });
+
+//demo User
+// app.get("/demonuser", async (req, res) => {
+//   let newUser = new User({
+//     email: "lalu@gmail.com",
+//     username: "dadu",
+//   });
+//   let registerUser = await User.register(newUser, "HelloWorld");
+//   res.send(registerUser);
+// });
+
+app.use("/", user);
 
 //This the Listing Routes
 app.use("/listings", RouterListings);

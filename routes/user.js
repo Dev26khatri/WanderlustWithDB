@@ -45,7 +45,7 @@ router.post(
     let { username } = req.body;
     console.log(req.user);
     req.flash("success", `Welcom Back ${username}!`);
-    let redirection = res.locals.redirectUrl || "/listings  ";
+    let redirection = res.locals.redirectUrl || "/listings";
     res.redirect(redirection);
   }
 );

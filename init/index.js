@@ -19,6 +19,10 @@ if (!MONGO_URL) {
 
 const initDB = async () => {
   await Listing.deleteMany({});
+  initdata.data = initdata.data.map((obj) => ({
+    ...obj,
+    owner: "695a38879437d4f7ca346293",
+  }));
   await Listing.insertMany(initdata.data);
   console.log("data was Initalized");
 };

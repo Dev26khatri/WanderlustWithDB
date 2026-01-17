@@ -1,10 +1,14 @@
 const Listing = require("../models/listing");
 const Review = require("../models/review");
+
 module.exports.createReview = async (req, res) => {
+  //POST method for the Review in specific listing
   let listing = await Listing.findById(req.params.id);
+  //Requesting Body for your review fields
   let newReview = new Review(req.body.review);
+  //Asign ID to the author
   newReview.author = req.user._id;
-  console.log(newReview);
+  // console.log(newReview);
   listing.reviews.push(newReview);
 
   await newReview.save();
@@ -17,6 +21,7 @@ module.exports.createReview = async (req, res) => {
   // res.send("New Review Saved");
 };
 module.exports.destroyReview = async (req, res) => {
+  //delete An review
   let { id, reviewId } = req.params;
   await Listing.findByIdAndUpdate(id, { $pull: { reviewId } });
   await Review.findByIdAndDelete(reviewId);

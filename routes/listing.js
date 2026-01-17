@@ -3,6 +3,10 @@ const router = express.Router({ mergeParams: true });
 const wrapAsync = require("../utils/wrapAsync.js");
 const { isLoggedIn, isOwner, validateListing } = require("../middleware.js");
 const listingControllers = require("../controllers/listing.js");
+const multer = require("multer");
+const { storage } = require("../cloudConfig.js");
+const upload = multer({ storage });
+
 // const ExpressError = require("../utils/ExpressError.js");
 // const Listing = require("../models/listing");
 // const { listingSchema, reviewSchema } = require("../schema.js");
@@ -23,6 +27,7 @@ router
   //Update PUT Routes for the Listings
   .put(
     isLoggedIn,
+    upload.single("listing[image]"),
     isOwner,
     validateListing,
     wrapAsync(listingControllers.updatingListing)
@@ -37,9 +42,13 @@ router
   //Post Method for the CreateListings
   .post(
     isLoggedIn,
+    upload.single("listing[image]"),
     validateListing,
     wrapAsync(listingControllers.createListing)
   );
+// .post(upload.single("listing[image]"), (req, res) => {
+//   res.send(req.file.path);
+// });
 //Render Updating Form
 router.get(
   "/:id/edit",

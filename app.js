@@ -1,3 +1,5 @@
+const dotenv = require("dotenv");
+dotenv.config();
 //Import all important library
 const express = require("express");
 const app = express();
@@ -6,7 +8,6 @@ const mongoose = require("mongoose");
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
-const dotenv = require("dotenv");
 const ExpressError = require("./utils/ExpressError.js");
 const RouterListings = require("./routes/listing.js");
 const RouterReview = require("./routes/review.js");
@@ -23,7 +24,6 @@ app.engine("ejs", ejsMate);
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 //When We Use .env File to Protect Your Links and Passwords
-dotenv.config();
 //Cookies Creation
 
 //Create Response in to JSON
